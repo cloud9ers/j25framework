@@ -1,0 +1,2 @@
+class RunningInstanceExceptions(Exception):    pass
+        

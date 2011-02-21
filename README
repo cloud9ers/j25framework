@@ -1,0 +1,8 @@
+== Introduction ==
+
+This project is an implementation of a high-performance, cache-aware, stacked application server
+that would allow several endpoints attached to given URLs, thus providing an infrastructure for REST
+services and XMLRPC services and others.
+
+Cloud Niners, Ltd.
+www.cloud9ers.com

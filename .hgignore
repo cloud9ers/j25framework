@@ -1,0 +1,9 @@
+syntax: glob
+
+*.pyc
+.*project
+.settings*
+.classpath*
+.metdata*
+.DS_Store*
+**.coverage
