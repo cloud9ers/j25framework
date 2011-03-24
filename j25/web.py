@@ -62,7 +62,7 @@ class http_responder(ActionWrapper):
         else:
             #text/plain or text/html
             if isinstance(result, dict):
-                headers['Content-Type'] = 'text/html'
+                headers['Content-Type'] = 'text/html; charset=UTF-8'
                 template_dirs = [os.path.join(os.getcwd(), 'templates')]
                 template_dirs.append(os.path.join(app_package.__path__[0], 'templates'))
                 tmpDir = os.path.join(app_package.__path__[0], 'tmp')

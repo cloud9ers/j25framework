@@ -38,8 +38,10 @@ class GlobalsTest(unittest.TestCase):
         db = conn.c9CachingDB
         self.assertTrue('c9CachingCollection' in db.collection_names())
         self.assertTrue(db.c9CachingCollection.count(), 1)
-        cacheRecord = db.c9CachingCollection.find_one()  
-        self.assertTrue(cacheRecord["Test"], 55)
+        cacheRecord = db.c9CachingCollection.find_one()
+        self.assertEqual(55, cacheObj.get_value("Test"))  
+        self.assertTrue(cacheRecord["_id"], 'test')
+        self.assertTrue('Test' in cacheRecord["data"])
         
         # test when regions not defined
         self.config.cache.regions = None
@@ -51,3 +53,22 @@ class GlobalsTest(unittest.TestCase):
         cacheObj.set_value("TestKey", 1000)
         self.assertTrue(cacheObj.get("TestKey"), 1000)   
                 
+
+    def testMemCache(self):        
+        cache = j25.cache
+        self.assertNotEquals(None, cache)
+#        self.assertTrue(isinstance(cache, CacheManager))
+        self.assertTrue(cache is j25.cache)
+        cacheObj = cache.get_cache_region('test', "memcached")
+        cacheObj.set_value("Test", 55)
+        self.assertEqual(55, cacheObj.get_value("Test"))  
+        
+        # test when regions not defined
+        self.config.cache.regions = None
+        cache = j25.cache
+        self.assertNotEquals(None, cache)
+#        self.assertTrue(isinstance(cache, CacheManager))
+        self.assertTrue(cache is j25.cache)       
+        cacheObj = cache.get_cache('test', expire=1000)
+        cacheObj.set_value("TestKey", 1000)
+        self.assertTrue(cacheObj.get("TestKey"), 1000)   

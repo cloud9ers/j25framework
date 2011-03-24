@@ -1,4 +1,3 @@
-from bin import Server
 from nose.loader import TestLoader
 from nose.plugins.manager import DefaultPluginManager
 from nose.suite import LazySuite
@@ -9,6 +8,7 @@ import optparse
 import os
 import sys
 import re
+from j25.scripts import Server
 
 logLevelsMap = {"DEBUG": logging.DEBUG,
                 "INFO" : logging.INFO,
