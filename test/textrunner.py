@@ -1,5 +1,5 @@
 from nose.core import TestProgram
-from bin import Server
+from j25.scripts import Server
 import logging
 
 Server.setupLogging(logging.INFO)
