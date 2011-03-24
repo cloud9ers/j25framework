@@ -59,6 +59,13 @@ class Http404(HTTPResponse):
     This status code is commonly used when the server does not wish to reveal exactly why the request has been refused, or when no other response is applicable. 
     '''
     status = HTTP.NOTFOUND
+
+class Http403(HTTPResponse):
+    '''
+    HTTP 403 means Forbidden.
+    403 Forbidden is a HTTP status code returned by a web server when a user agent requests a resource that the server does not allow them to. 
+    '''
+    status = HTTP.FORBIDDEN
     
 class Http410(HTTPResponse):
     '''
