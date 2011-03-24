@@ -14,6 +14,7 @@ from j25.http.contenttype import contenttype
 DEFAULT_CHUNK_SIZE = 64 * 1024
 
 def _streamer(stream, chunk_size=DEFAULT_CHUNK_SIZE, bytes=None):
+    '''internal streamer for files'''
     offset = 0
     while bytes == None or offset < bytes:
         if bytes != None and bytes - offset < chunk_size:
@@ -29,15 +30,6 @@ def _streamer(stream, chunk_size=DEFAULT_CHUNK_SIZE, bytes=None):
         offset += length
     stream.close()
      
-class ActionWrapper(object):
-    logger = logging.getLogger("ActionWrapper")
-    def __init__(self, func):
-        self.func = func
-        #this indicates if the action is wrapped by a custom wrapper or not.
-        self.wrapped = True
-        
-    def __call__(self, *args, **kwargs):
-        raise NotImplemented
     
 def extract_args(environ, start_response, request, session):
     return ([], request.urlvars)
@@ -70,10 +62,16 @@ def render_template(params, headers, app_package, controller_instance, request):
         result = exceptions.html_error_template().render()
     return result
     
-class FileResponder(ActionWrapper):
-    '''FileResponder will stream static files'''
-    def __call__(self, environ, start_response, request, session, app_package, controller_instance):
-        pass
+class ActionWrapper(object):
+    '''In order to have an action exposed, the action method must be wrapped by one of the ActionWrappers'''
+    logger = logging.getLogger("ActionWrapper")
+    def __init__(self, func):
+        self.func = func
+        #this indicates if the action is wrapped by a custom wrapper or not.
+        self.wrapped = True
+        
+    def __call__(self, *args, **kwargs):
+        raise NotImplemented
 
 class HttpResponder(ActionWrapper):
     def __call__(self, environ, start_response, request, session, app_package, controller_instance):
@@ -113,22 +111,22 @@ class HttpResponder(ActionWrapper):
                 start_response(controller_instance.get_response_code(), headers.items())
                 return result
             else:
-                headers['Content-Type'] = 'text/plain'
+                headers['Content-Type'] = 'text/plain; charset=UTF-8'
                 
-        headers['Content-Length'] = len(str(result))
+        headers['Content-Length'] = len(unicode(result))
         start_response(controller_instance.get_response_code(), headers.items())
         return str(result)
     
 class Controller(object):
     def __init__(self, session, url, app_config, request=None):
         self._headers = {}
+        self._http_response_code = HTTP.OK
+        self._template = None
+        self._template_engine = None
         self.session = session
         self.request = request
         self.config = app_config
         self.url = url
-        self._http_response_code = HTTP.OK
-        self._template = None
-        self._template_engine = None
     
     #named with underscore to remove potential name collision with controller actions
     def call_controller_action(self, environ, start_response, route, appPackage):
