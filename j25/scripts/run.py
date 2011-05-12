@@ -8,6 +8,7 @@ import optparse
 import os
 import sys
 import j25
+from multiprocessing import freeze_support
 
 #add libs in the framework
 libs = os.path.join(j25.__path__[0], os.path.pardir, 'lib')
@@ -32,6 +33,25 @@ AUTO_PROJECT_DIRS = [('apps', True),
 
 project_routing_template = '''def router(map):
     pass'''
+
+app_workerconfig = '''import sys
+import os
+sys.path.insert(0, os.getcwd())
+
+BROKER_HOST = "localhost"
+BROKER_USER = "guest"
+BROKER_PASSWORD = "guest"
+BROKER_VHOST = "/"
+
+CELERYD_CONCURRENCY=2
+## Using the database to store results
+# CELERY_RESULT_BACKEND = "database"
+# CELERY_RESULT_DBURI = "sqlite:///celerydb.sqlite"
+
+# Results published as messages (requires AMQP).
+CELERY_RESULT_BACKEND = "amqp"
+DISABLE_RATE_LIMITS=True
+'''
 
 app_config_template='''#J25_TEMPLATE_ENGINE="mako"'''
 app_routing_template='''APP_ROOT = '/%s'
@@ -176,11 +196,14 @@ def runServer(args, options):
     _checkProject()
     _addPythonPath()
     args.pop(0)
+    j25.project_directory = HERE
     Server.Main("server.ini")
 
 def runWorker(args, options):
     import worker
+    freeze_support()
     args.pop(0)
+    j25.project_directory = HERE
     worker.main()
     
 def dumpConfig(args, options):
@@ -228,6 +251,9 @@ def newProject(args, options):
     Configuration.dump_file(os.path.join(projectName, 'server.ini'), config)
     f = open(os.path.join(projectName, 'routing.py'), 'w')
     f.write(project_routing_template)
+    f.close()
+    f = open(os.path.join(projectName, 'workerconfig.py'), 'w')
+    f.write(app_workerconfig)
     f.close()
     if options.withapp:
         config = Configuration.load_file(os.path.join(projectName, 'server.ini'), False)
@@ -288,6 +314,10 @@ def main():
     if args[0] not in COMMANDS:
         print >> sys.stderr, "Unknown command %s is given" % args[0]
         exit(1)
+    import j25.worker.WorkerLoader
+    os.putenv('CELERY_LOADER', j25.worker.WorkerLoader.__name__ + '.WorkerLoader')
+    os.environ['CELERY_LOADER'] = j25.worker.WorkerLoader.__name__ + '.WorkerLoader'
+    os.putenv('WORKER_CONFIG', 'workerconfig')
     COMMANDS[args[0]](args, options)
     
 if __name__ == '__main__':

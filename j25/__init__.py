@@ -5,7 +5,12 @@ import sys
 
 VERSION = '0.5'
 logger = logging.getLogger("Framework")
+
+###### GLOBALLY AVAILABLE ##########
 config = None
+project_directory = None
+####################################
+
 _cache = None
 _store = None
 try:
@@ -16,7 +21,6 @@ else:
     sys.modules['j25.model'] = mongoengine
 
 model = mongoengine
-
 
 
 class CacheProxy(object):

@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 from celery.bin import celeryd
 from multiprocessing import freeze_support
-import logging
 import os
 from j25.scripts import Server
+import j25.worker.WorkerLoader
 
 def main():
-    os.putenv('CELERY_LOADER', 'j25.worker.WorkerLoader.WorkerLoader')
-    os.environ['CELERY_LOADER'] = 'j25.worker.WorkerLoader.WorkerLoader'
-    Server.setupLogging(logging.INFO)
+    print Server.getBanner()
+
     celeryd.main()
 
 if __name__ == "__main__":

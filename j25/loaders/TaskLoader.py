@@ -1,9 +1,20 @@
 import pkgutil
 import logging
+import importlib
 
 logger = logging.getLogger("TaskLoader")
 
 class AutoTaskLoader(object):
+    @classmethod
+    def load_apps(cls, apps):
+        i = 0
+        for app in apps:
+#            app_module = importlib.import_module(app)
+            tasks_module = importlib.import_module(app + "." + "tasks")
+            cls.load(tasks_module)
+            i += 1
+        return i
+            
     @classmethod
     def load(cls, package_or_packages):
         if not isinstance(package_or_packages, list):

@@ -61,6 +61,3 @@ def boot(configFile):
     ws = HttpServer(dispatcher, config)
     logger.info(getBanner())
     ws.start()
-        
-if __name__ == '__main__':
-    Main()
