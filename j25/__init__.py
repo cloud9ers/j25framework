@@ -18,9 +18,9 @@ def init():
     logger = logging.getLogger("Framework")
     try:
         import mongoengine
-    except ImportError:
-        logger.critical("MongoEngine is not installed, all store operations will fail!, this shouldn't ever happen!")
-        print >> sys.stderr, "MongoEngine is not installed, all store operations will fail!, this shouldn't ever happen!"
+    except ImportError, e:
+        logger.critical("MongoEngine is not installed, all store operations will fail!, this shouldn't ever happen!... Reason: %s", e)
+        print >> sys.stderr, "MongoEngine is not installed, all store operations will fail!, this shouldn't ever happen!... Reason: %s" % e
         exit(22)
     else:
         sys.modules['j25.model'] = mongoengine
