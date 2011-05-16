@@ -19,11 +19,13 @@ def init():
     try:
         import mongoengine
     except ImportError:
-        logger.critical("MongoEngine is not installed, all store operations will fail!")
+        logger.critical("MongoEngine is not installed, all store operations will fail!, this shouldn't ever happen!")
+        print >> sys.stderr, "MongoEngine is not installed, all store operations will fail!, this shouldn't ever happen!"
+        exit(22)
     else:
         sys.modules['j25.model'] = mongoengine
-    global model
-    model = mongoengine
+        global model
+        model = mongoengine
 
 
 class CacheProxy(object):
