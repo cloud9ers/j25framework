@@ -14,6 +14,9 @@ from multiprocessing import freeze_support
 libs = os.path.join(j25.__path__[0], os.path.pardir, 'lib')
 sys.path.insert(0, libs)
 
+#initialize the framework constants
+j25.init()
+
 HERE = os.getcwd()
 
 AUTO_APP_DIRS = [('model', True),
@@ -122,15 +125,16 @@ def newApp(args, options):
     finally:
         print RESET_SEQ
     
-def runTests(args, options):
-    from test import c9Runner
-    import nose
-    _checkProject()
-    c9Runner.main(nose.core.TextTestRunner())
+#def runTests(args, options):
+#    from test import c9Runner
+#    import nose
+#    _checkProject()
+#    c9Runner.main(nose.core.TextTestRunner())
 #    sys.argv.pop(0)
 #    testRunner()
     
-def testRunner():
+def testRunner(args, options):
+    _checkProject()
     import nose
     from nose_cov import Cov
     from nose.plugins.manager import DefaultPluginManager
@@ -289,7 +293,7 @@ def installApp(args, options):
         logger.info("\033[1;33mApplication %s already installed in the project.\033[0m" % appName)
     
 COMMANDS = {'new-app': newApp, 
-            'run-tests': runTests, 
+            'run-tests': testRunner, 
             'run-server': runServer,
             'run-worker': runWorker,
             'dump-config': dumpConfig,

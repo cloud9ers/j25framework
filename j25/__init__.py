@@ -4,7 +4,6 @@ import logging
 import sys
 
 VERSION = '0.5'
-logger = logging.getLogger("Framework")
 
 ###### GLOBALLY AVAILABLE ##########
 config = None
@@ -13,14 +12,18 @@ project_directory = None
 
 _cache = None
 _store = None
-try:
-    import mongoengine
-except ImportError:
-    logger.critical("MongoEngine is not installed, all store operations will fail!")
-else:
-    sys.modules['j25.model'] = mongoengine
+model = None
 
-model = mongoengine
+def init():    
+    logger = logging.getLogger("Framework")
+    try:
+        import mongoengine
+    except ImportError:
+        logger.critical("MongoEngine is not installed, all store operations will fail!")
+    else:
+        sys.modules['j25.model'] = mongoengine
+    global model
+    model = mongoengine
 
 
 class CacheProxy(object):
