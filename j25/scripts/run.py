@@ -318,9 +318,9 @@ def main():
     if args[0] not in COMMANDS:
         print >> sys.stderr, "Unknown command %s is given" % args[0]
         exit(1)
-    import j25.worker.WorkerLoader
-    os.putenv('CELERY_LOADER', j25.worker.WorkerLoader.__name__ + '.WorkerLoader')
-    os.environ['CELERY_LOADER'] = j25.worker.WorkerLoader.__name__ + '.WorkerLoader'
+    import j25.loaders.WorkerLoader
+    os.putenv('CELERY_LOADER', j25.loaders.WorkerLoader.__name__ + '.WorkerLoader')
+    os.environ['CELERY_LOADER'] = j25.loaders.WorkerLoader.__name__ + '.WorkerLoader'
     os.putenv('WORKER_CONFIG', 'workerconfig')
     COMMANDS[args[0]](args, options)
     

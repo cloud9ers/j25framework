@@ -23,7 +23,6 @@ class WorkerLoader(BaseLoader):
         
         config = Configuration.load_file("server.ini")
         j25.config = config
-        j25.worker.CONFIG = config
         self.configured = True
         return DictAttribute(configModule)
 
