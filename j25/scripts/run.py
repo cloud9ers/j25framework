@@ -206,7 +206,7 @@ def runServer(args, options):
 def runWorker(args, options):
     import worker
     freeze_support()
-    args.pop(0)
+    sys.argv.pop(0)
     j25.project_directory = HERE
     worker.main()
     

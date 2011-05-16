@@ -5,6 +5,7 @@ import sys
 import j25
 import os
 import logging
+from celery.datastructures import DictAttribute
 _RACE_PROTECTION = False
 
 class WorkerLoader(BaseLoader):
@@ -24,7 +25,7 @@ class WorkerLoader(BaseLoader):
         j25.config = config
         j25.worker.CONFIG = config
         self.configured = True
-        return configModule
+        return DictAttribute(configModule)
 
 def autoLoadTasks():
     global _RACE_PROTECTION
