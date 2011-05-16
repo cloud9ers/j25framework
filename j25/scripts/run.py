@@ -86,8 +86,8 @@ def _checkProject():
         exit(1)
           
 def _isProject():
-    for directory, _ in AUTO_PROJECT_DIRS:
-        if not os.path.isdir(directory):
+    for directory, mandatory in AUTO_PROJECT_DIRS:
+        if not os.path.isdir(directory) and mandatory:
             return False
     if not os.path.isfile("server.ini"):
         return False
