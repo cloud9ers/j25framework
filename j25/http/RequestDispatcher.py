@@ -45,7 +45,7 @@ Tried to match:
                 start_response(HTTP.INTERNAL_SERVER_ERROR, [('Content-Type', 'text/plain')])
                 error_message = HTTP.INTERNAL_SERVER_ERROR
                 if j25.is_dev():
-                    error_message = error_format % (HTTP.INTERNAL_SERVER_ERROR, "'app' is not defined for %s (route:%)" % (environ['PATH_INFO'], route))
+                    error_message = error_format % (HTTP.INTERNAL_SERVER_ERROR, "'app' is not defined for %s (route:%s)" % (environ['PATH_INFO'], route))
                 return [error_message]
             
             if 'action' not in route:
@@ -53,7 +53,7 @@ Tried to match:
                 start_response(HTTP.INTERNAL_SERVER_ERROR, [('Content-Type', 'text/plain')])
                 error_message = HTTP.INTERNAL_SERVER_ERROR
                 if j25.is_dev():
-                    error_message = error_format % (HTTP.INTERNAL_SERVER_ERROR, "'action' is not defined for %s (route:%)" % (environ['PATH_INFO'], route))
+                    error_message = error_format % (HTTP.INTERNAL_SERVER_ERROR, "'action' is not defined for %s (route:%s)" % (environ['PATH_INFO'], route))
 
                 return [error_message]
     
