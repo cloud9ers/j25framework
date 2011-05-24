@@ -135,9 +135,11 @@ def newApp(args, options):
     
 def testRunner(args, options):
     _checkProject()
+    sys.argv.pop(0)
+
     import nose
-    from nose_cov import Cov
-    from nose.plugins.manager import DefaultPluginManager
+#    from nose_cov import Cov
+#    from nose.plugins.manager import DefaultPluginManager
     from nose.suite import LazySuite
     from nose.loader import TestLoader
     import re
@@ -160,19 +162,19 @@ def testRunner(args, options):
     parser.add_option("-p", "--package", dest="package", default=False, help="Run test cases in a specific package")
     env = os.environ
     conf = runner.config
-    cov  = Cov()
-    cov.enabled = True
-    cov.options(parser, env)
+#    cov  = Cov()
+#    cov.enabled = True
+#    cov.options(parser, env)
     source = defaultDir[:defaultDir.rfind('/')]
     parser.set_default('cov_source', [source])
   
     options, fqTestNames = parser.parse_args() 
-    if options.enable_plugin_cov: 
-        cov.configure(options, conf)
-        cov.begin()
-        covaragePlugin = DefaultPluginManager()
-        covaragePlugin.addPlugin(cov)
-        conf.plugins = covaragePlugin
+#    if options.enable_plugin_cov: 
+#        cov.configure(options, conf)
+#        cov.begin()
+#        covaragePlugin = DefaultPluginManager()
+#        covaragePlugin.addPlugin(cov)
+#        conf.plugins = covaragePlugin
         
     logging.info("Started with argv=%s", str(sys.argv))
     if options.package:
