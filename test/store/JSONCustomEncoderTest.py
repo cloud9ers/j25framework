@@ -2,7 +2,6 @@ import unittest
 import simplejson
 from j25.utils.JSONCustomEncoder import JSONCustomEncoder
 from datetime import datetime, date, time
-from j25.model import *
 from bson.objectid import ObjectId
 
 def setUpModule(module):
