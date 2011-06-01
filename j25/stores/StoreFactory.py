@@ -6,7 +6,7 @@ class MongoEngineFactory(object):
     logger = logging.getLogger("MongoEngineFactory")
     @staticmethod
     def create_instance(config):
-        from mongoengine import connect
+        import mongoengine
         params = {}
         if config.store.ip:
             params['host'] = config.store.ip
@@ -18,10 +18,15 @@ class MongoEngineFactory(object):
             params['password'] = config.store.password
         MongoEngineFactory.logger.debug("Database name: %s", config.store.db_name)
         MongoEngineFactory.logger.debug("params: %s", params)
-        db = connect(config.store.db_name, **params)
+        try:
+            db = mongoengine.connect(config.store.db_name, **params)
+        except mongoengine.connection.ConnectionError, e:
+            logging.critical("COULD NOT CONNECT TO MONGODB: %s", str(e))
+            logging.critical("ALL DATABASE OPERATIONS WILL == FAIL ==")
+            db = None
         MongoEngineFactory.logger.info("Connected to MongoDB:%s", config.store.db_name)
         return db
-            
+
 class StoreFactory(object):
     # Mappings of store types to factories
     _storesCreators =  {Constants.MONGOENGINE: MongoEngineFactory.create_instance}

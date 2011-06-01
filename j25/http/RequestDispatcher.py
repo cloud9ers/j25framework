@@ -11,6 +11,14 @@ error_format = "%s\n\n--------------%s"
 class RequestDispatcher(object):
     def __init__(self, app_loader):
         self._apps = {} #key: appName, value: (appPackage, controllers)
+        self.load_routing()
+        self._app_loader = app_loader
+        self.load_applications()
+        
+    def load_applications(self):
+        self._app_loader.load_applications(self)
+    
+    def load_routing(self):
         if j25.is_dev():
             always_scan = True
         else:
@@ -22,9 +30,7 @@ class RequestDispatcher(object):
             logger.warn("No routing.py defined in the project, can be safe if app routing.py is correctly configured")
         else:
             routing.router(self._mapper)
-        self._app_loader = app_loader
-        self._app_loader.load_applications(self)
-        
+            
     def create_application(self, environ, start_response):
         try:
             logger.debug("WSGI Call")
@@ -145,6 +151,10 @@ Tried to match:
         return
     
     def get_controller_names(self):
+        if j25.is_dev():
+            #reload apps
+            self.load_applications()
+            
         controllers = [app[1] for app in self._apps.values()]
         return [item for sublist in controllers for item in sublist]
     
