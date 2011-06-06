@@ -9,7 +9,7 @@ from j25.exceptions.RunningInstanceExceptions import RunningInstanceExceptions
 class RabbitMQFixture(Fixture):
     def __init__(self, config=None):
         self.config = config or TestConfiguration.create_instance()
-        self._rabbitDBBin = os.path.sep.join([os.environ.get("RABBITMQ_HOME", None), 'scripts', 'rabbitmq-server'])
+        self._rabbitDBBin = os.path.sep.join([os.environ.get("RABBITMQ_HOME", None), 'usr', 'sbin', 'rabbitmq-server'])
         self._mnesia_base =  os.path.sep.join([tempfile.gettempdir(), 'mnesia'])
         
     def setUp(self):

@@ -9,7 +9,7 @@ from test.TestConfiguration import TestConfiguration
 class MongoDBFixture(Fixture):
     def __init__(self, config=None):
         self.config = config or TestConfiguration.create_instance()
-        self._mongoDBBin = os.path.sep.join([os.environ.get("MONGODB_HOME", "/opt/mongodb"), 'bin', 'mongod'])
+        self._mongoDBBin = os.path.sep.join([os.environ.get("MONGODB_HOME", "/usr"), 'bin', 'mongod'])
         self._mongoDB =  os.path.sep.join([tempfile.gettempdir(), 'mongodb'])
         
     def setUp(self):
