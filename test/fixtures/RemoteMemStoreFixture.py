@@ -7,7 +7,7 @@ from test.TestConfiguration import TestConfiguration
 class RemoteMemStoreFixture(Fixture):
     def __init__(self, config=None):
         self.config = config or TestConfiguration.create_instance()
-        self._memCachedIn = os.path.sep.join([os.environ.get("MEMCACHED_HOME", "/usr/local"), 'bin', 'memcached'])
+        self._memCachedIn = os.path.sep.join([os.environ.get("MEMCACHED_HOME", "/usr"), 'bin', 'memcached'])
         
     def setUp(self):
         logging.info("Starting Up The MemCached...")
