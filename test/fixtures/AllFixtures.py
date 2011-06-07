@@ -14,7 +14,7 @@ class AllFixtures(Fixture):
         self.config = config or TestConfiguration.create_instance()
         self.appServer = AppServerFixture(config=self.config)
         self.mongoDB = MongoDBFixture(config=self.config)
-        self.rabbitMQ = RabbitMQFixture(config=self.config)
+#        self.rabbitMQ = RabbitMQFixture(config=self.config)
         self.remoteMemStore = RemoteMemStoreFixture(config=self.config)
         
     def startUp(self):
@@ -25,10 +25,10 @@ class AllFixtures(Fixture):
         except RunningInstanceExceptions, e:
             raise e
         #starting the RabbitMQ server
-        try:
-            self.rabbitMQ.setUp()
-        except RunningInstanceExceptions, e:
-            logging.debug("stopping the started fixtures")
+#        try:
+#            self.rabbitMQ.setUp()
+#        except RunningInstanceExceptions, e:
+#            logging.debug("stopping the started fixtures")
             self.mongoDB.tearDown()
             raise e
         #starting the RemoteMemStore server
@@ -37,7 +37,7 @@ class AllFixtures(Fixture):
         except RunningInstanceExceptions, e:
             logging.debug("stopping the started fixtures")
             self.mongoDB.tearDown()
-            self.rabbitMQ.tearDown()
+#            self.rabbitMQ.tearDown()
             raise e
         #starting the application server
         self.appServer.setUp()
@@ -47,11 +47,20 @@ class AllFixtures(Fixture):
     def tearDown(self):
         logging.info('SUTTING DOWN (%(names)s) fixtures ...' %AllFixtures._FIXTURES)
         #shutting down the application server
-        self.appServer.tearDown()
+        try:
+            self.appServer.tearDown()
+        except:
+            logging.critical("Couldn't stop application server")
         #shutting down the RemoteMemStore server
-        self.remoteMemStore.tearDown()
+        try:
+            self.remoteMemStore.tearDown()
+        except:
+            logging.critical("Couldn't stop memcached")
         #shutting down the RabbitMQ server
-        self.rabbitMQ.tearDown()
+#        try:
+#            self.rabbitMQ.tearDown()
+#        except:
+#            logging.critical("Couldn't stop RABBITMQ")
         #shutting down the MongoDB server
         self.mongoDB.tearDown()
         logging.info('All fixtures (%(names)s) shut down successfully' %AllFixtures._FIXTURES)

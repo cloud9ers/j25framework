@@ -9,7 +9,7 @@ from j25.exceptions.RunningInstanceExceptions import RunningInstanceExceptions
 class RabbitMQFixture(Fixture):
     def __init__(self, config=None):
         self.config = config or TestConfiguration.create_instance()
-        self._rabbitDBBin = os.path.sep.join([os.environ.get("RABBITMQ_HOME", None), 'usr', 'sbin', 'rabbitmq-server'])
+        self._rabbitDBBin = os.path.sep.join(['/usr', 'sbin', 'rabbitmq-server'])
         self._mnesia_base =  os.path.sep.join([tempfile.gettempdir(), 'mnesia'])
         
     def setUp(self):
@@ -40,10 +40,15 @@ class RabbitMQFixture(Fixture):
         time.sleep(5)
         
     def tearDown(self):
+        import pdb;pdb.set_trace()
         logging.info("Shutting Down RabbitMQ...!!")
         self.p.terminate()
         self.p.wait()
-        time.sleep(1)
+        time.sleep(1.5)
+        try:
+            self.p.kill()
+        except:
+            pass
         try:
             subprocess.call(['rm', '-rf', self._mnesia_base])
         except OSError, e:

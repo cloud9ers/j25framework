@@ -1,7 +1,6 @@
 from nose.loader import TestLoader
 from nose.plugins.manager import DefaultPluginManager
 from nose.suite import LazySuite
-from nose_cov import Cov
 import logging
 import nose
 import optparse
@@ -34,22 +33,11 @@ def main(runner):
     parser.add_option("-c", "--count", dest="count", default="1", help="Run test cases for <COUNT> times")
     parser.add_option("-d", "--directory", dest="directory", default=False, help="Run test cases in specific directory")
     parser.add_option("-p", "--package", dest="package", default=False, help="Run test cases in a specific package")
-    env = os.environ
-    conf = runner.config
-    cov  = Cov()
-    cov.enabled = True
-    cov.options(parser, env)
     source = defaultDir[:defaultDir.rfind('/')]
     parser.set_default('cov_source', [source])
   
     options, fqTestNames = parser.parse_args() 
     Server.setupLogging(logLevelsMap[options.logging])
-    if options.enable_plugin_cov: 
-        cov.configure(options, conf)
-        cov.begin()
-        covaragePlugin = DefaultPluginManager()
-        covaragePlugin.addPlugin(cov)
-        conf.plugins = covaragePlugin
         
     logging.info("Started with argv=%s", str(sys.argv))
 
