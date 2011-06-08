@@ -7,6 +7,7 @@ VERSION = '0.5'
 
 ###### GLOBALLY AVAILABLE ##########
 config = None
+framework_directory = __path__[0]
 project_directory = None
 ####################################
 

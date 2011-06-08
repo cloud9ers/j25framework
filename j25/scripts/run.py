@@ -125,14 +125,6 @@ def newApp(args, options):
     finally:
         print RESET_SEQ
     
-#def runTests(args, options):
-#    from test import c9Runner
-#    import nose
-#    _checkProject()
-#    c9Runner.main(nose.core.TextTestRunner())
-#    sys.argv.pop(0)
-#    testRunner()
-    
 def testRunner(args, options):
     _checkProject()
     sys.argv.pop(0)
@@ -300,7 +292,7 @@ COMMANDS = {'new-app': newApp,
             'run-worker': runWorker,
             'dump-config': dumpConfig,
             'new-project': newProject,
-            'install-app': installApp
+            'install-app': installApp,
             }
 
 def main():
