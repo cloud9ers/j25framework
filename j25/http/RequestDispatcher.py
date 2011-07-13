@@ -1,6 +1,5 @@
 import logging
 from j25.utils import HTTP
-from routes.mapper import Mapper
 import traceback
 from webob.request import Request
 import j25
@@ -11,26 +10,11 @@ error_format = "%s\n\n--------------%s"
 class RequestDispatcher(object):
     def __init__(self, app_loader):
         self._apps = {} #key: appName, value: (appPackage, controllers)
-        self.load_routing()
         self._app_loader = app_loader
-        self.load_applications()
         
     def load_applications(self):
         self._app_loader.load_applications(self)
     
-    def load_routing(self):
-        if j25.is_dev():
-            always_scan = True
-        else:
-            always_scan = False
-        self._mapper = Mapper(controller_scan=self.get_controller_names, always_scan=always_scan)
-        try:
-            import routing
-        except ImportError:
-            logger.warn("No routing.py defined in the project, can be safe if app routing.py is correctly configured")
-        else:
-            routing.router(self._mapper)
-            
     def create_application(self, environ, start_response):
         try:
             logger.debug("WSGI Call")
@@ -44,7 +28,8 @@ Route:%s
 
 Tried to match:
 
-%s''' % (environ['PATH_INFO'], route, str(self._mapper))]
+%s
+''' % (environ['PATH_INFO'], route, str(j25._mapper))]
             
             if 'app' not in route:
                 logger.error("'app' is not defined for %s (route:%)", environ['PATH_INFO'], route)
@@ -107,12 +92,21 @@ Tried to match:
         #@todo: misses resetting the mapper for now
         self._apps.pop(app_package)
     
+    def register_all_apps_router(self):
+        import importlib
+        for app in j25._apps:
+            router = importlib.import_module(".routing", package=app)
+            self.register_app_router(router, app)
+            
+    def register_app_router(self, router, app_package):
+        router.router(j25._mapper.submapper(app=app_package))
+
     def register_app(self, app_package, controllers, router):
         '''
         @param controllers: {'controller_name': ControllerClass} 
         '''
         app_name = app_package.__name__
-        router.router(self._mapper.submapper(app=app_package.__name__))
+        self.register_app_router(router, app_name)
         if app_name in self._apps:
             logger.error("Application %s is already registered in the application server", app_name)
             return False
@@ -144,16 +138,13 @@ Tried to match:
         if j25.is_dev():
             self._app_loader.reload(app_name, self)
                 
-    def get_mapper(self):
-        return self._mapper
-
     def _any_controller(self):
         return
     
     def get_controller_names(self):
-        if j25.is_dev():
-            #reload apps
-            self.load_applications()
+#        if j25.is_dev():
+##            reload apps
+#            self.load_applications()
             
         controllers = [app[1] for app in self._apps.values()]
         return [item for sublist in controllers for item in sublist]

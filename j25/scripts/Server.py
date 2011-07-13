@@ -1,6 +1,8 @@
 from j25.utils.ColoredLogger import ColoredFormatter
 import logging
 import sys
+from j25.loaders import Importer
+from j25.loaders.reloader import ModuleMonitor, Reloader
 
 logLevelsMap = {"DEBUG": logging.DEBUG,
                 "INFO" : logging.INFO,
@@ -32,18 +34,25 @@ def setupLogging(level):
     logger.setLevel(level)
     
 def boot(configFile):
-    from j25.Configuration import Configuration
-    from j25.http.HttpServer import HttpServer
-    from j25.http.RequestDispatcher import RequestDispatcher
-    from j25.loaders import AppLoader
-    import j25
     logger = logging.getLogger("j25")
     logger.debug("Started with argv=%s", str(sys.argv))    
     if configFile:
+        from j25.Configuration import Configuration
         config = Configuration.load_file(configFile)
     else:
         config = Configuration.load_defaults()
     
+    import j25
+    if config.main.mode == "DEV":
+        Importer.enable()
+        j25._reloader = Reloader(0.6)
+        j25._reloader.start()
+        logger.warning("\033[1;31mDEVELOPMENT MODE ACTIVE\033[0m")
+
+    from j25.http.HttpServer import HttpServer
+    from j25.http.RequestDispatcher import RequestDispatcher
+    from j25.loaders import AppLoader
+        
     logger.info("\033[1;33mProject: %s\033[0m", config.main.project_name)    
     #setting configuration global
     j25.config = config
@@ -52,12 +61,12 @@ def boot(configFile):
     logger.debug("Connecting to MongoDB")
     j25.initStore()
         
-    if config.main.mode == "DEV":
-        logger.warning("\033[1;31mDEVELOPMENT MODE ACTIVE\033[0m")
     #create the dispatcher
     dispatcher = RequestDispatcher(AppLoader.AutoAppLoader(eval(config.main.applications)))
+    j25._dispatcher = dispatcher
+    j25._createRoutingMiddleware()
+    j25._dispatcher.load_applications()
     #run the server and loop forever
-
     ws = HttpServer(dispatcher, config)
     logger.info(getBanner())
     ws.start()

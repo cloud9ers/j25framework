@@ -3,6 +3,7 @@ from j25.loaders.TaskLoader import AutoTaskLoader
 import importlib
 import logging
 import traceback
+import j25
 
 logger = logging.getLogger("AppLoader")
 
@@ -17,6 +18,7 @@ class AutoAppLoader(object):
             #load application
             if self.load_application(package, dispatcher):
                 self.apps.append(str(package))
+                j25._apps.append(package)
         logger.info("%s application(s) loaded", len(self.apps))
         
     def unload_application(self, app, dispatcher):
@@ -25,18 +27,15 @@ class AutoAppLoader(object):
     def reload(self, app, dispatcher):
         logger.info("Reloading application %s", app)
         self.unload_application(app, dispatcher)
-        return self.load_application(app, dispatcher, reload_app=True)
+        return self.load_application(app, dispatcher)
     
-    def load_application(self, package, dispatcher, reload_app=False):
+    def load_application(self, package, dispatcher):
         #loading application means loading all the models, controllers, tasks
         logger.debug("Loading app %s", package)
         try:
-            if reload_app:
-                reload(__import__('%s.config' % package, fromlist="t"))
             logger.debug("%s model objects loaded from app %s", AutoControllerLoader.load(package,
                                                                                             importlib.import_module(".routing", package=package), 
-                                                                                            dispatcher, importlib.import_module(".controllers", package=package),
-                                                                                            reload_controllers=reload_app),
+                                                                                            dispatcher, importlib.import_module(".controllers", package=package)),
                                                                                             package)
             AutoTaskLoader.load(importlib.import_module(".tasks", package=package))
         except:

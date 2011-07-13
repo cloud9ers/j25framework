@@ -3,7 +3,7 @@ from j25.caching.CacheManager import CacheFactory
 import logging
 import sys
 
-VERSION = '0.5'
+VERSION = '0.61'
 
 ###### GLOBALLY AVAILABLE ##########
 config = None
@@ -13,8 +13,45 @@ project_directory = None
 
 _cache = None
 _store = None
+_reloader = None
+_dispatcher = None
+_routes_middleware = None
+_mapper = None
+_apps = []
 model = None
 
+
+def is_dev():
+    return config.main.mode == "DEV"
+
+def _createRoutingMiddleware():
+    global _routes_middleware
+    from routes.middleware import RoutesMiddleware
+    _load_routing()
+    assert _mapper is not None
+    _mapper.sub_domains = eval(config.main.is_subdomain_aware)
+    _routes_middleware = RoutesMiddleware(_dispatcher.create_application, _mapper)
+
+def _update_mapper():
+    _routes_middleware.mapper = _mapper
+
+def _load_routing():
+    global _mapper
+    logger = logging.getLogger("j25 Framework")
+    from routes import Mapper
+    if is_dev():
+        always_scan = True
+    else:
+        always_scan = False
+    _mapper = Mapper(controller_scan=_dispatcher.get_controller_names, always_scan=always_scan)
+    try:
+        import routing
+    except ImportError:
+        logger.warn("No routing.py defined in the project, can be safe if app routing.py is correctly configured")
+    else:
+        routing.router(_mapper)
+    logger.info("Routing is loaded")
+        
 def init():    
     logger = logging.getLogger("Framework")
     try:
@@ -48,9 +85,6 @@ def initStore():
         logging.critical(str(e))
          
 cache = CacheProxy()
-
-def is_dev():
-    return config.main.mode == "DEV"
 
 def onAppServerStart(func):
     func.onStart = True

@@ -40,7 +40,6 @@ class RabbitMQFixture(Fixture):
         time.sleep(5)
         
     def tearDown(self):
-        import pdb;pdb.set_trace()
         logging.info("Shutting Down RabbitMQ...!!")
         self.p.terminate()
         self.p.wait()

@@ -1,15 +1,14 @@
-import pkgutil
-import logging
-import inspect
 from j25.web import Controller
+import inspect
+import logging
+import pkgutil
 import traceback
-import importlib
 
 logger = logging.getLogger("ControllerLoader")
 
 class AutoControllerLoader(object):
     @classmethod
-    def load(cls, app_name, router, dispatcher, package_or_packages, reload_controllers=False):
+    def load(cls, app_name, router, dispatcher, package_or_packages):
         if not isinstance(package_or_packages, list):
             package_or_packages = [package_or_packages]
         total = 0
@@ -19,9 +18,6 @@ class AutoControllerLoader(object):
             for _, modname, ispkg in pkgutil.iter_modules(base_package.__path__):
                 if ispkg == False:
                     module = __import__(base_package.__name__ + "." + modname, fromlist="t")
-                    if reload_controllers:
-                        logger.debug("reloading module %s", str(module))
-                        reload(module)
                     for class_name in dir(module):
                         klass = getattr(module, class_name)
                         if inspect.isclass(klass):
@@ -39,8 +35,8 @@ class AutoControllerLoader(object):
                             except:
                                 logger.error("Failed to load controller %s:%s", klass.__name__, traceback.format_exc())
         if controllers:
-            app_package = importlib.import_module(app_name)
-            reload(app_package)
+#            app_package = importlib.import_module(app_name)
+            app_package = __import__(app_name, fromlist="t")
             if not dispatcher.register_app(app_package, controllers, router):
                 logger.error("Couldn't register application %s", app_name)
                 return 0

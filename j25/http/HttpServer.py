@@ -21,9 +21,7 @@ class HttpServer(object):
                         'session.secure': bool(config.session.secure),
                         'session.timeout': int(config.session.timeout)
                         }
-        mapper = dispatcher.get_mapper()
-        mapper.sub_domains = eval(config.main.is_subdomain_aware)
-        app_info = {'wsgi_app': SessionMiddleware(RoutesMiddleware(dispatcher.create_application, mapper), session_opts, environ_key=j25.Constants.SESSION_KEY)}
+        app_info = {'wsgi_app': SessionMiddleware(j25._routes_middleware, session_opts, environ_key=j25.Constants.SESSION_KEY)}
         sock_list = [config.main.ip, int(config.main.port)]
         rocket.HTTP_SERVER_SOFTWARE = "J25 Web Server %s" % j25.VERSION
         self.server = rocket.Rocket(tuple(sock_list),
@@ -49,4 +47,5 @@ class HttpServer(object):
     def stop(self):
         logger.info("Stopping the HTTP server")
         self.server.stop()
-
+        if j25._reloader:
+            j25._reloader.terminate()

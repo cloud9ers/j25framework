@@ -1,6 +1,6 @@
 import pkgutil
 import logging
-import importlib
+#import importlib
 
 logger = logging.getLogger("TaskLoader")
 
@@ -10,7 +10,7 @@ class AutoTaskLoader(object):
         i = 0
         for app in apps:
 #            app_module = importlib.import_module(app)
-            tasks_module = importlib.import_module(app + "." + "tasks")
+            tasks_module = __import__(app + "." + "tasks")
             cls.load(tasks_module)
             i += 1
         return i
