@@ -175,6 +175,7 @@ def newProject(args, options):
     s1 = config.add_section('main')
     s1.add_option('project_name', projectName)
     s1.add_option('applications', [])
+    s1.add_option('excluded_applications_from_worker', [])
     s1.add_option("mode", "DEV")
     s1.add_option("ip", "0.0.0.0")
     s1.add_option("port", "8800")

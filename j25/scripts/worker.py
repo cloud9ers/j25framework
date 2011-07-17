@@ -4,7 +4,7 @@ def main():
     from celery.bin import celeryd
     from j25.scripts import Server
     print Server.getBanner()
-
+    
     celeryd.main()
 
 if __name__ == "__main__":

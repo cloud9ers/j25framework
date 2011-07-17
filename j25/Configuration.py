@@ -61,6 +61,8 @@ class Configuration(object):
         #section.add_option("model_package", "test.dummy")
         section.add_option("mode", "DEV")
         section.add_option("applications", "[]")
+        section.add_option("excluded_applications_from_worker", "[]")
+        section.add_option("applications_in_worker", "[]")
         section.add_option("ip", "0.0.0.0")
         section.add_option("port", "8800")
         section.add_option("project_name", "MyProject")

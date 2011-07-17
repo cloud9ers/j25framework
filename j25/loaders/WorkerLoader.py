@@ -34,6 +34,10 @@ def autoLoadTasks():
     
     _RACE_PROTECTION = True
     apps = eval(j25.config.main.applications)
+    if j25.config.main.has_option('applications_in_worker') and eval(j25.config.main.applications_in_worker):
+        apps = eval(j25.config.main.applications_in_worker)
+    else:
+        apps = list(set(apps).difference(set(eval(j25.config.main.excluded_applications_from_worker))))
     logging.debug("Loading tasks from apps %s" % apps)
     count = AutoTaskLoader.load_apps(apps)
     if count:
