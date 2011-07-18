@@ -1,6 +1,6 @@
 import logging
-from j25.utils import HTTP
 import traceback
+from j25.exceptions import HttpExceptions as HTTP
 from webob.request import Request
 import j25
 

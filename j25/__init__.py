@@ -2,6 +2,7 @@
 from j25.caching.CacheManager import CacheFactory
 import logging
 import sys
+from j25 import http
 
 VERSION = '0.61'
 
@@ -19,12 +20,12 @@ _routes_middleware = None
 _mapper = None
 _apps = []
 model = None
-
+Http = http
 
 def is_dev():
     return config.main.mode == "DEV"
 
-def _createRoutingMiddleware():
+def _create_routing_middleware():
     global _routes_middleware
     from routes.middleware import RoutesMiddleware
     _load_routing()
@@ -85,7 +86,3 @@ def initStore():
         logging.critical(str(e))
          
 cache = CacheProxy()
-
-def onAppServerStart(func):
-    func.onStart = True
-    return func

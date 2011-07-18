@@ -1,16 +1,35 @@
-from j25.utils import HTTP
+#The client's request was successfully received, understood, and accepted
+OK = '200 OK'
+CREATED = '201 Created'
+ACCEPTED = '202 Accepted'
+NO_CONTENT = '204 No Content'
+
+MOVED = '301 Moved Permanently'
+#Client Error
+BAD_REQUEST = '400 Bad Request'
+UNAUTHORIZED = '401 Unauthorized'
+PAYMENT_REQUIRED = '402 Payment Required'
+FORBIDDEN = '403 Forbidden'
+NOTFOUND= '404 Not Found'
+METHOD_NOT_ALLOWED = '405 Method Not Allowed'
+REQUEST_TIMEOUT = '408 Request Timeout'
+GONE = '410 Gone'
+# Server Error
+INTERNAL_SERVER_ERROR = '500 Internal Server Error'
+NOTIMPLEMENTED = '501 Not Implemented'
+SERVICE_UNAVAILABLE = '503 Service Unavailable'
 
 class HTTPResponse(Exception):
     '''
     The parent of all HTTP Exceptions
     '''
-    status = HTTP.OK
+    status = OK
 
 class Http204(HTTPResponse):
     '''
     The server has fulfilled the request but does not need to return an entity-body.
     '''
-    status = HTTP.NO_CONTENT
+    status = NO_CONTENT
     
 class Http301(HTTPResponse):
     '''
@@ -26,7 +45,7 @@ class Http301(HTTPResponse):
     the user agent MUST NOT automatically redirect the request unless it can be confirmed by the user,
     since this might change the conditions under which the request was issued. 
     '''
-    status = HTTP.MOVED
+    status = MOVED
     
 class Http400(HTTPResponse):
     '''
@@ -34,7 +53,7 @@ class Http400(HTTPResponse):
     The request could not be understood by the server due to malformed syntax. 
     The client SHOULD NOT repeat the request without modifications. 
     '''
-    status = HTTP.BAD_REQUEST
+    status = BAD_REQUEST
     
 class Http401(HTTPResponse):
     '''
@@ -46,7 +65,7 @@ class Http401(HTTPResponse):
     If the request already included Authorization credentials,
     then the 401 response indicates that authorization has been refused for those credentials.
     '''
-    status = HTTP.UNAUTHORIZED
+    status = UNAUTHORIZED
   
 class Http404(HTTPResponse):
     '''
@@ -58,14 +77,14 @@ class Http404(HTTPResponse):
     that an old resource is permanently unavailable and has no forwarding address.
     This status code is commonly used when the server does not wish to reveal exactly why the request has been refused, or when no other response is applicable. 
     '''
-    status = HTTP.NOTFOUND
+    status = NOTFOUND
 
 class Http403(HTTPResponse):
     '''
     HTTP 403 means Forbidden.
     403 Forbidden is a HTTP status code returned by a web server when a user agent requests a resource that the server does not allow them to. 
     '''
-    status = HTTP.FORBIDDEN
+    status = FORBIDDEN
     
 class Http410(HTTPResponse):
     '''
@@ -81,14 +100,14 @@ class Http410(HTTPResponse):
     at the server's site. It is not necessary to mark all permanently unavailable resources as "gone" 
     or to keep the mark for any length of time -- that is left to the discretion of the server owner. 
     '''
-    status = HTTP.GONE
+    status = GONE
     
 class Http500(HTTPResponse):
     '''
     HTTP 500 means Internal Server Error.
     The server encountered an unexpected condition which prevented it from fulfilling the request. 
     '''
-    status = HTTP.INTERNAL_SERVER_ERROR
+    status = INTERNAL_SERVER_ERROR
     
 HttpNoContent = Http204
 HttpMovedPermanently = Http301  

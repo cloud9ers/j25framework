@@ -2,7 +2,7 @@ from j25.utils.ColoredLogger import ColoredFormatter
 import logging
 import sys
 from j25.loaders import Importer
-from j25.loaders.reloader import ModuleMonitor, Reloader
+from j25.loaders.reloader import Reloader
 
 logLevelsMap = {"DEBUG": logging.DEBUG,
                 "INFO" : logging.INFO,
@@ -58,15 +58,14 @@ def boot(configFile):
     j25.config = config
     
     #init store
-    logger.debug("Connecting to MongoDB")
+    logger.debug("Connecting to Database")
     j25.initStore()
         
     #create the dispatcher
-    dispatcher = RequestDispatcher(AppLoader.AutoAppLoader(eval(config.main.applications)))
-    j25._dispatcher = dispatcher
-    j25._createRoutingMiddleware()
+    j25._dispatcher = RequestDispatcher(AppLoader.AutoAppLoader(eval(config.main.applications)))
+    j25._create_routing_middleware()
     j25._dispatcher.load_applications()
     #run the server and loop forever
-    ws = HttpServer(dispatcher, config)
+    ws = HttpServer(config)
     logger.info(getBanner())
     ws.start()

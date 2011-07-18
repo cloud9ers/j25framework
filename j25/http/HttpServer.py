@@ -8,7 +8,7 @@ import signal
 logger = logging.getLogger("HttpServer")
 
 class HttpServer(object):
-    def __init__(self, dispatcher, config):
+    def __init__(self, config):
         self.config = config
         logger.info("Creating HTTP server on %s:%s", config.main.ip, int(config.main.port))
         session_opts = {'session.type': config.session.type,

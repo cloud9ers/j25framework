@@ -1,7 +1,6 @@
 #Contract 
 from j25.exceptions.HttpExceptions import HTTPResponse, Http404, Http403
 from j25.http.formatters import MAPPING
-from j25.utils import HTTP
 from mako import exceptions
 from mako.lookup import TemplateLookup
 import logging
@@ -10,6 +9,8 @@ import stat
 import errno
 import time
 from j25.http.contenttype import contenttype
+from j25.http import HttpResponse
+from j25.exceptions import HttpExceptions
 
 DEFAULT_CHUNK_SIZE = 64 * 1024
 
@@ -58,7 +59,7 @@ def render_template(params, headers, app_package, controller_instance, request):
         myTemplate = myLookup.get_template(templateFile)
         result = myTemplate.render_unicode(**params)
     except:
-        controller_instance.set_response_code(HTTP.INTERNAL_SERVER_ERROR)
+        controller_instance.set_response_code(HttpExceptions.INTERNAL_SERVER_ERROR)
         result = exceptions.html_error_template().render()
     return result
     
@@ -89,15 +90,22 @@ class HttpResponder(ActionWrapper):
         headers = controller_instance.get_headers()
         
         if result is None:
-            controller_instance.set_response_code(HTTP.NO_CONTENT)
+            headers['Content-Length'] = 0
+            controller_instance.set_response_code(HttpExceptions.NO_CONTENT)
             start_response(controller_instance.get_response_code(), headers.items())
-            return ''
+            return []
+        
+        if issubclass(result, HttpResponse):
+            headers['Content-Length'] = 0
+            controller_instance.set_response_code(result.get_http_response())
+            start_response(controller_instance.get_response_code(), headers.items())
+            return []
         
         if format:
             #formatter specified
             if format not in MAPPING:
-                start_response(HTTP.NOTFOUND, [('Content-Type', 'text/plain; charset=UTF-8')])
-                return [HTTP.NOTFOUND + ": No formatter defined for %s" % (environ['PATH_INFO'])]
+                start_response(HttpExceptions.NOTFOUND, [('Content-Type', 'text/plain; charset=UTF-8')])
+                return [HttpExceptions.NOTFOUND + ": No formatter defined for %s" % (environ['PATH_INFO'])]
 
             result = MAPPING[format](result, request, session, app_package, controller_instance)
         else:
@@ -120,7 +128,7 @@ class HttpResponder(ActionWrapper):
 class Controller(object):
     def __init__(self, session, url, app_config, request=None):
         self._headers = {}
-        self._http_response_code = HTTP.OK
+        self._http_response_code = HttpExceptions.OK
         self._template = None
         self._template_engine = None
         self.session = session
@@ -133,13 +141,13 @@ class Controller(object):
         #find the action
         #action filter
         if route['action'].startswith('_'):
-            start_response(HTTP.NOTFOUND, [('Content-Type', 'text/plain; charset=UTF-8')])
-            return [HTTP.NOTFOUND + ": No action defined to '%s'" % environ['PATH_INFO']]
+            start_response(HttpExceptions.NOTFOUND, [('Content-Type', 'text/plain; charset=UTF-8')])
+            return [HttpExceptions.NOTFOUND + ": No action defined to '%s'" % environ['PATH_INFO']]
 
         action = getattr(self, route['action'], None)
         if not action or (not hasattr(action, '__call__')):
-            start_response(HTTP.NOTFOUND, [('Content-Type', 'text/plain; charset=UTF-8')])
-            return [HTTP.NOTFOUND + ": No action '%s' was found defined to %s" % (route['action'], environ['PATH_INFO'])]
+            start_response(HttpExceptions.NOTFOUND, [('Content-Type', 'text/plain; charset=UTF-8')])
+            return [HttpExceptions.NOTFOUND + ": No action '%s' was found defined to %s" % (route['action'], environ['PATH_INFO'])]
            
         if not getattr(action, 'wrapped', None):
             #wrap with HttpResponder if not wrapped already
@@ -148,9 +156,9 @@ class Controller(object):
             #if wrapped, make sure it's callable
             if getattr(action, 'not_exposed', False):
                 #barf
-                start_response(HTTP.NOTFOUND, [('Content-Type', 'text/plain; charset=UTF-8')])
+                start_response(HttpExceptions.NOTFOUND, [('Content-Type', 'text/plain; charset=UTF-8')])
                 logging.warn("Access trial to non-exposed action %s", route['action'])
-                return [HTTP.NOTFOUND + ": No action '%s' was found defined to %s" % (route['action'], environ['PATH_INFO'])]
+                return [HttpExceptions.NOTFOUND + ": No action '%s' was found defined to %s" % (route['action'], environ['PATH_INFO'])]
             
         return action(environ, start_response, self.request, self.session, appPackage, self)
     
