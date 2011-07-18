@@ -1,4 +1,4 @@
-from j25.utils import HTTP
+from j25.exceptions import HttpExceptions as HTTP
 from j25.utils.JSONCustomEncoder import JSONCustomEncoder
 import simplejson
 
