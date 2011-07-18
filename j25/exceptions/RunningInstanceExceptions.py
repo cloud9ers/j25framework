@@ -1,2 +1,2 @@
-class RunningInstanceExceptions(Exception):    pass
+class RunningInstanceExceptions(Exception): pass
         

@@ -1,16 +1,17 @@
 #Contract 
+from j25.exceptions import HttpExceptions
 from j25.exceptions.HttpExceptions import HTTPResponse, Http404, Http403
+from j25.http import HttpResponse
+from j25.http.contenttype import contenttype
 from j25.http.formatters import MAPPING
 from mako import exceptions
 from mako.lookup import TemplateLookup
+import errno
+import inspect
 import logging
 import os
 import stat
-import errno
 import time
-from j25.http.contenttype import contenttype
-from j25.http import HttpResponse
-from j25.exceptions import HttpExceptions
 
 DEFAULT_CHUNK_SIZE = 64 * 1024
 
@@ -95,7 +96,7 @@ class HttpResponder(ActionWrapper):
             start_response(controller_instance.get_response_code(), headers.items())
             return []
         
-        if issubclass(result, HttpResponse):
+        if inspect.isclass(result) and issubclass(result, HttpResponse):
             headers['Content-Length'] = 0
             controller_instance.set_response_code(result.get_http_response())
             start_response(controller_instance.get_response_code(), headers.items())
