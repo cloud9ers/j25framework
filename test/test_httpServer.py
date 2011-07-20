@@ -21,8 +21,7 @@ class HttpServerTest(unittest.TestCase):
         pass
     
     def testRestartability(self):
-        appLoader = AutoAppLoader([])
-        ws = HttpServer(RequestDispatcher(appLoader), TestConfiguration.create_instance())
+        ws = HttpServer(TestConfiguration.create_instance())
         self.assertFalse(self._isPortReserved(8888))
         thread = threading.Thread(target=ws.start)
         thread.start()

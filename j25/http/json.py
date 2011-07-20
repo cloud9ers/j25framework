@@ -17,5 +17,5 @@ def json_formatter(result, request, session, appPackage, controllerInstance):
     return data
 
 def render_json(obj):
-    data = simplejson.dumps(obj, cls=JSONCustomEncoder)
+    data = simplejson.dumps(obj, cls=JSONCustomEncoder, ensure_ascii=False)
     return data

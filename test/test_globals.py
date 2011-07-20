@@ -26,32 +26,32 @@ class GlobalsTest(unittest.TestCase):
     def tearDown(self):
         self.config = None
                 
-    def testCache(self):        
-        cache = j25.cache
-        self.assertNotEquals(None, cache)
-#        self.assertTrue(isinstance(cache, CacheManager))
-        self.assertTrue(cache is j25.cache)
-        cacheObj = cache.get_cache_region('test', "mongodbCache")
-        cacheObj.set_value("Test", 55)
-        conn = pymongo.Connection("localhost",27017)
-        self.assertTrue('c9CachingDB' in conn.database_names())
-        db = conn.c9CachingDB
-        self.assertTrue('c9CachingCollection' in db.collection_names())
-        self.assertTrue(db.c9CachingCollection.count(), 1)
-        cacheRecord = db.c9CachingCollection.find_one()
-        self.assertEqual(55, cacheObj.get_value("Test"))  
-        self.assertTrue(cacheRecord["_id"], 'test')
-        self.assertTrue('Test' in cacheRecord["data"])
-        
-        # test when regions not defined
-        self.config.cache.regions = None
-        cache = j25.cache
-        self.assertNotEquals(None, cache)
-#        self.assertTrue(isinstance(cache, CacheManager))
-        self.assertTrue(cache is j25.cache)       
-        cacheObj = cache.get_cache('test', expire=1000)
-        cacheObj.set_value("TestKey", 1000)
-        self.assertTrue(cacheObj.get("TestKey"), 1000)   
+#    def testCache(self):        
+#        cache = j25.cache
+#        self.assertNotEquals(None, cache)
+##        self.assertTrue(isinstance(cache, CacheManager))
+#        self.assertTrue(cache is j25.cache)
+#        cacheObj = cache.get_cache_region('test', "mongodbCache")
+#        cacheObj.set_value("Test", 55)
+#        conn = pymongo.Connection("localhost",27017)
+#        self.assertTrue('c9CachingDB' in conn.database_names())
+#        db = conn.c9CachingDB
+#        self.assertTrue('c9CachingCollection' in db.collection_names())
+#        self.assertTrue(db.c9CachingCollection.count(), 1)
+#        cacheRecord = db.c9CachingCollection.find_one()
+#        self.assertEqual(55, cacheObj.get_value("Test"))  
+#        self.assertTrue(cacheRecord["_id"], 'test')
+#        self.assertTrue('Test' in cacheRecord["data"])
+#        
+#        # test when regions not defined
+#        self.config.cache.regions = None
+#        cache = j25.cache
+#        self.assertNotEquals(None, cache)
+##        self.assertTrue(isinstance(cache, CacheManager))
+#        self.assertTrue(cache is j25.cache)       
+#        cacheObj = cache.get_cache('test', expire=1000)
+#        cacheObj.set_value("TestKey", 1000)
+#        self.assertTrue(cacheObj.get("TestKey"), 1000)   
                 
 
     def testMemCache(self):        
