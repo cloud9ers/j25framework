@@ -7,23 +7,39 @@ import j25
 import logging
 import threading
 import time
+from j25.scripts.Server import setupLogging
+import sys
 
 class AppServerFixture(Fixture):
     
-    def __init__(self, config=None, servicesPackages=None, modelPackages=None):
+    def __init__(self, config=None, projectDir=None):
+        sys.path.insert(0, projectDir)
         self.config = config or TestConfiguration.create_instance()
         j25.config = self.config
-        self.modelPackages = modelPackages
-        self.servicesPackages = servicesPackages
 
     def loadApplication(self, application):
-        self.appploader.loadApplication(application, self.dispatcher, True)
+        self.appploader.load_application(application, j25._dispatcher)
             
     def setUp(self):
+        setupLogging(logging.INFO)
+        logger = logging.getLogger("j25")
+        #setting configuration global
+        j25.config = self.config
+        
+        #init store
+        logger.debug("Connecting to Database")
+        j25.initStore()
+            
+        #create the dispatcher
         self.appploader = AutoAppLoader([])
-        self.dispatcher = RequestDispatcher(self.appploader)
+        j25._dispatcher = RequestDispatcher(self.appploader)
+        j25._create_routing_middleware()
+        j25._dispatcher.load_applications()
+        #run the server and loop forever
+        
         logging.info('STARTING the Application server')
-        self.ws = HttpServer(self.dispatcher, self.config)
+        logger.info("\033[1;33mProject: %s\033[0m", self.config.main.project_name)
+        self.ws = HttpServer(self.config)
         self.thread = threading.Thread(target=self.ws.start)
         self.thread.start()
         while (not self.ws.is_running()):
