@@ -146,7 +146,7 @@ def runWorker(args, options):
     freeze_support()
     sys.argv.pop(0)
     j25.project_directory = HERE
-    worker.main()
+    worker.main("server.ini")
     
 def dumpConfig(args, options):
     from j25.Configuration import Configuration
