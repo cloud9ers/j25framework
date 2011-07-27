@@ -9,6 +9,7 @@ import os
 import sys
 import j25
 from multiprocessing import freeze_support
+from j25.scripts.utils import RelaxedOptionParser
 
 #add libs in the framework
 libs = os.path.join(j25.__path__[0], os.path.pardir, 'lib')
@@ -70,28 +71,6 @@ def router(map):
 '''
 logger = logging.getLogger('j25')
 
-def _createPythonPackage(parent, name, is_python_package):
-    path = os.path.join(parent, name)
-    os.mkdir(path)
-    if is_python_package:
-        open(os.path.join(path, '__init__.py'), 'w').close()
-
-def _addPythonPath():
-    sys.path.append(".")
-    sys.path.append("./apps")
-
-def _checkProject():
-    if not _isProject():
-        print >> sys.stderr, "current directory doesn't seem to be a correct project directory"
-        exit(1)
-          
-def _isProject():
-    for directory, mandatory in AUTO_PROJECT_DIRS:
-        if not os.path.isdir(directory) and mandatory:
-            return False
-    if not os.path.isfile("server.ini"):
-        return False
-    return True
 
 def newApp(args, options):
     from j25.Configuration import Configuration
@@ -125,15 +104,6 @@ def newApp(args, options):
     finally:
         print RESET_SEQ
     
-def testRunner(args, options):
-    _checkProject()
-    sys.argv.pop(0)
-    _addPythonPath()
-    import nose
-    import nose.plugins.xunit
-    runner = nose.core.TestProgram(addplugins=[nose.plugins.xunit.Xunit()])
-    return runner.runTests()
-
 def runServer(args, options):
     _checkProject()
     _addPythonPath()
@@ -232,7 +202,6 @@ def installApp(args, options):
         logger.info("\033[1;33mApplication %s already installed in the project.\033[0m" % appName)
     
 COMMANDS = {'new-app': newApp, 
-            'run-tests': testRunner, 
             'run-server': runServer,
             'run-worker': runWorker,
             'dump-config': dumpConfig,
@@ -241,7 +210,7 @@ COMMANDS = {'new-app': newApp,
             }
 
 def main():
-    parser = optparse.OptionParser()
+    parser = RelaxedOptionParser()
     parser.add_option("-v", "--verbose", dest="verbose", default=False, help="Set verbosity level")
     parser.add_option("-l", "--logging", dest="logging", default="INFO", help="Set logging level")
     parser.add_option("-w", "--with", dest="withapp", default="", help="Add built in app to new project")
