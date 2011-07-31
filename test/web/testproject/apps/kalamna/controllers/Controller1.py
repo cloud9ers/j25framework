@@ -54,11 +54,8 @@ class Controller1(Controller):
         return Http.ACCEPTED
     
     def test_format(self, format=None):
-        import pdb;pdb.set_trace()
         if format == "json":
-#            return "json"
             return {'format': format}
         else:
-#            return "other"
-            return {'format': 'other'}
+            return {'format': 'other format'}
    

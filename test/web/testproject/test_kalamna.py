@@ -155,18 +155,17 @@ class WebOperations(unittest.TestCase):
         self.assertEqual(202, response.status)  
         self.assertEqual(0, len(content))
         
-#        action="test_format"
-#        format = "json"
-#        uri = 'http://%s:%s/%s/%s/%s.%s' % (self.ip, self.port, _appName, self.controller, action, format)        
-#        response, content = self.http.request(uri, 'GET')
-#        data = json.loads(content)
-#        self.assertEqual(data['format'], 'json')
-#        self.assertEqual(200, response.status)
-        
-#        format="xml"
-#        uri = 'http://%s:%s/%s/%s/%s' % (self.ip, self.port, _appName, self.controller, action)        
-#        response, content = self.http.request(uri, 'GET')
-#        import pdb;pdb.set_trace()
+        action="test_format"
+        format = "json"
+        uri = 'http://%s:%s/%s/%s/%s.%s' % (self.ip, self.port, _appName, self.controller, action, format)
+        response, content = self.http.request(uri, 'GET')
+        data = json.loads(content)
+        self.assertEqual(data['format'], 'json')
+        self.assertEqual(200, response.status)
+                
+        format="xml"
+        uri = 'http://%s:%s/%s/%s/%s' % (self.ip, self.port, _appName, self.controller, action)        
+        response, content = self.http.request(uri, 'GET')
 #        data = json.loads(content)
 #        self.assertEqual(data['format'], 'other')
 #        self.assertEqual(200, response.status)        
