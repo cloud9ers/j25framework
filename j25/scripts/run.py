@@ -9,7 +9,7 @@ import os
 import sys
 import j25
 from multiprocessing import freeze_support
-from j25.scripts.utils import RelaxedOptionParser
+from j25.scripts.utils import RelaxedOptionParser, _checkProject, _addPythonPath
 
 #add libs in the framework
 libs = os.path.join(j25.__path__[0], os.path.pardir, 'lib')
@@ -78,7 +78,7 @@ def newApp(args, options):
     if len(args) < 2:
         print >> sys.stderr, "you must supply the name of the app"
         exit(1)
-    _checkProject()
+    _checkProject(AUTO_PROJECT_DIRS)
     appName = args[1]
     appDirectory = os.path.join('apps', appName)
     print Server.getBanner()
@@ -105,7 +105,7 @@ def newApp(args, options):
         print RESET_SEQ
     
 def runServer(args, options):
-    _checkProject()
+    _checkProject(AUTO_PROJECT_DIRS)
     _addPythonPath()
     args.pop(0)
     j25.project_directory = HERE
@@ -186,7 +186,7 @@ def installApp(args, options):
     if len(args) < 2:
         print >> sys.stderr, "you must supply the name of the app"
         exit(1)
-    _checkProject()
+    _checkProject(AUTO_PROJECT_DIRS)
     appName = args[1]
     print Server.getBanner()
     print COLOR_SEQ % 33

@@ -42,8 +42,8 @@ def _addPythonPath():
     sys.path.append(".")
     sys.path.append("./apps")
 
-def _checkProject():
-    if not _isProject():
+def _checkProject(AUTO_PROJECT_DIRS):
+    if not _isProject(AUTO_PROJECT_DIRS):
         print >> sys.stderr, "current directory doesn't seem to be a correct project directory"
         exit(1)
           
