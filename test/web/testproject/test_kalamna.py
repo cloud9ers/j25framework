@@ -32,9 +32,9 @@ def setUpModule(module):
     
 def tearDownModule(module):
     module._appServer.tearDown()
-    module._mongo.tearDown()
     module._celeryd.tearDown()
     module._rabbit.tearDown()
+    module._mongo.tearDown()
 class WebOperations(unittest.TestCase):
     
     def setUp(self):
