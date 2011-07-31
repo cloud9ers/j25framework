@@ -10,6 +10,8 @@ from j25.scripts.Server import setupLogging
 import json
 from test.web.testproject.apps.kalamna.model.User import User
 from urllib import urlencode
+from test.fixtures.RabbitMQFixture import RabbitMQFixture
+from test.fixtures.CeleryFixture import CeleryFixture
 
 _appName = 'kalamna'
 _appServer = None
@@ -18,6 +20,10 @@ _store = None
 def setUpModule(module):
     module._mongo = MongoDBFixture()
     module._mongo.setUp()
+    module._rabbit = RabbitMQFixture()
+    module._rabbit.setUp()
+    module._celeryd = CeleryFixture()
+    module._celeryd.setUp()
     import test.web.testproject
     module._appServer = AppServerFixture(projectDir=test.web.testproject.__path__[0])
     module._appServer.setUp()
@@ -27,7 +33,8 @@ def setUpModule(module):
 def tearDownModule(module):
     module._appServer.tearDown()
     module._mongo.tearDown()
- 
+    module._celeryd.tearDown()
+    module._rabbit.tearDown()
 class WebOperations(unittest.TestCase):
     
     def setUp(self):
@@ -162,13 +169,8 @@ class WebOperations(unittest.TestCase):
         data = json.loads(content)
         self.assertEqual(data['format'], 'json')
         self.assertEqual(200, response.status)
-                
-        format="xml"
+        
         uri = 'http://%s:%s/%s/%s/%s' % (self.ip, self.port, _appName, self.controller, action)        
         response, content = self.http.request(uri, 'GET')
-#        data = json.loads(content)
-#        self.assertEqual(data['format'], 'other')
-#        self.assertEqual(200, response.status)        
-        
-        
+   
         
