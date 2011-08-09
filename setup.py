@@ -34,5 +34,16 @@ setup(name='j25framework',
                       'console_scripts': console_scripts
                       },
       license = "LGPLv3",
+      classifiers = ['Development Status :: 4 - Beta',
+                     'Intended Audience :: Developers',
+                     'Intended Audience :: System Administrators',
+                     'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
+                     'Operating System :: MacOS :: MacOS X',
+                     'Operating System :: POSIX :: Linux',
+                     'Programming Language :: Python :: 2.6',
+                     'Programming Language :: Python :: 2.7',
+                     'Topic :: Internet :: WWW/HTTP :: WSGI :: Server',
+                     'Topic :: Internet :: WWW/HTTP :: WSGI :: Middleware',
+                     'Topic :: Software Development :: Libraries :: Application Frameworks'],
       
       )
