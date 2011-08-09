@@ -16,19 +16,17 @@ required_packages = ['mako >= 0.3.6',
 if sys.version_info < (2, 7):
     required_packages.append('importlib')
     
-required_for_tests = ['nose >= 1.0']
-    
 console_scripts = ['j25 =  j25.scripts.run:main']
 setup(name='j25framework',
       description="A highly scalable REST application development framework",
+      long_description="A highly scalable REST application development framework",
       version="0.5.1",
+      url='http://confluence.cloud9ers.com/display/j25www/',
       author="Cloud Niners Ltd.",
       author_email="asoliman@cloud9ers.com",
-      packages=find_packages(exclude=['bin', 'bin.*' 'rbac', 'rbac.*', 'test', 'test.*']),
+      packages=find_packages(exclude=['test', 'test.*', 'rbac', 'rbac.*', ]),
       zip_safe=False,
-      tests_require= required_for_tests,
       install_requires= required_packages,
-#      scripts=['bin/j25'],
       entry_points = {
                       'console_scripts': console_scripts
                       },
