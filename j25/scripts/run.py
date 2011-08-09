@@ -9,7 +9,8 @@ import os
 import sys
 import j25
 from multiprocessing import freeze_support
-from j25.scripts.utils import RelaxedOptionParser, _checkProject, _addPythonPath
+from j25.scripts.utils import RelaxedOptionParser, _checkProject, _addPythonPath,\
+    _createPythonPackage
 
 #add libs in the framework
 libs = os.path.join(j25.__path__[0], os.path.pardir, 'lib')
