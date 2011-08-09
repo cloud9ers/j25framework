@@ -4,6 +4,9 @@ use_setuptools()
 
 from setuptools import setup, find_packages
 
+#Remember to modify j25.__init__.VERSION
+version = '0.5.1'
+
 required_packages = ['mako >= 0.3.6',
                      'mongoengine >= v0.4-0',
                      'routes >= 1.12.3',
@@ -20,7 +23,7 @@ console_scripts = ['j25 =  j25.scripts.run:main']
 setup(name='j25framework',
       description="A highly scalable REST application development framework",
       long_description="A highly scalable REST application development framework",
-      version="0.5.1",
+      version=version,
       url='http://confluence.cloud9ers.com/display/j25www/',
       author="Cloud Niners Ltd.",
       author_email="asoliman@cloud9ers.com",

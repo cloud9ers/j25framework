@@ -4,7 +4,8 @@ import logging
 import sys
 from j25 import http
 
-VERSION = '0.61'
+#Remember to modify setup.py
+VERSION = '0.5.1'
 
 ###### GLOBALLY AVAILABLE ##########
 config = None
