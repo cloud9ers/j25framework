@@ -33,10 +33,15 @@ class AutoAppLoader(object):
         #loading application means loading all the models, controllers, tasks
         logger.debug("Loading app %s", package)
         try:
-            logger.debug("%s model objects loaded from app %s", AutoControllerLoader.load(package,
-                                                                                            importlib.import_module(".routing", package=package), 
-                                                                                            dispatcher, importlib.import_module(".controllers", package=package)),
-                                                                                            package)
+            try:
+                controller_mod = importlib.import_module(".controllers", package=package)
+            except ImportError:
+                logger.warn("Application '%s' doesn't have controllers module", package)
+            else:
+                logger.debug("%s model objects loaded from app %s", AutoControllerLoader.load(package,
+                                                                                              importlib.import_module(".routing", package=package), 
+                                                                                              dispatcher, controller_mod),
+                                                                                              package)
             AutoTaskLoader.load(importlib.import_module(".tasks", package=package))
         except:
             logger.error("Failed to load app %s: %s", str(package), traceback.format_exc())
