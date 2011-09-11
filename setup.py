@@ -5,7 +5,7 @@ use_setuptools()
 from setuptools import setup, find_packages
 
 #Remember to modify j25.__init__.VERSION
-version = '0.5.1-1'
+version = '0.5.1-2'
 
 required_packages = ['mako >= 0.3.6',
                      'mongoengine >= v0.4-0',
