@@ -8,6 +8,7 @@ syntax: glob
 .DS_Store*
 **.coverage
 distribute-*
+test/nosetests*
 
 syntax: regexp
 ^MANIFEST$
