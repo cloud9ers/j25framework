@@ -10,7 +10,7 @@ class CeleryFixture(Fixture):
     def setUp(self):
         logging.info("Starting Up Celery...")
         env = os.environ.copy()
-        self.p = subprocess.Popen([self.celerybin])
+        self.p = subprocess.Popen('celeryd')
         sleepTime = 2
         logging.info("Waiting for %s seconds of second to let celery settle" % sleepTime)
         time.sleep(sleepTime)
