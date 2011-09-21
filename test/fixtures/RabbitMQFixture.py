@@ -5,6 +5,7 @@ import tempfile
 from test.fixtures.Fixture import Fixture
 from test.TestConfiguration import TestConfiguration
 from j25.exceptions.RunningInstanceExceptions import RunningInstanceExceptions
+import psutil
 
 class RabbitMQFixture(Fixture):
     def __init__(self, config=None):
@@ -41,6 +42,11 @@ class RabbitMQFixture(Fixture):
         
     def tearDown(self):
         logging.info("Shutting Down RabbitMQ...!!")
+        parent_process = psutil.Process(self.p.pid)
+        for process in parent_process.get_children():
+            process.kill()
+            logging.info("process %s was killed", process.pid)
+            time.sleep(0.2)
         self.p.terminate()
         self.p.wait()
         time.sleep(1.5)
