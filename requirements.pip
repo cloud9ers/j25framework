@@ -1,6 +1,6 @@
 mako >= 0.3.6
 mongoengine == 0.5
-routes >= 1.12.3
+Routes >= 1.12.3
 simplejson >= 2.1.2
 celery >= 2.3.1
 WebOb >= 1.0.8
