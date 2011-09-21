@@ -1,12 +1,16 @@
 #!/bin/bash
 
 #assuming the machine has virtualenv and pip installed
+if [ ! -d cache ]
+  then
+   mkdir cache
+fi
 
 virtualenv --no-site-packages environment
 
 export PYTHONPATH=
+
 source environment/bin/activate
+pip install --download-cache=cache  yolk nose
 
-pip install  yolk nose
-
-pip install -r requirements.pip
+pip install --download-cache=cache -r requirements.pip
