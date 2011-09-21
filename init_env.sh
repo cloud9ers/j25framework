@@ -5,7 +5,8 @@
 virtualenv --no-site-packages environment
 
 export PYTHONPATH=
+source environment/bin/activate
 
-pip install -E environment yolk nose
+pip install  yolk nose
 
-pip install -E environment -r requirements.pip
+pip install -r requirements.pip
