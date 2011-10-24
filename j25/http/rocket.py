@@ -1409,5 +1409,6 @@ class WSGIWorker(Worker):
                 output.close()
 
             sock_file.close()
+	    self.closeConnection = True
 
 # Monolithic build...end of module: rocket\methods\wsgi.py
