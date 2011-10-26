@@ -1157,6 +1157,7 @@ class FileSystemWorker(Worker):
         finally:
             self.err_log.debug('Finally closing sock_file')
             sock_file.close()
+	    self.closeConnection = True
 
 # Monolithic build...end of module: rocket\methods\fs.py
 # Monolithic build...start of module: rocket\methods\wsgi.py
@@ -1408,5 +1409,6 @@ class WSGIWorker(Worker):
                 output.close()
 
             sock_file.close()
+	    self.closeConnection = True
 
 # Monolithic build...end of module: rocket\methods\wsgi.py
