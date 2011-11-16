@@ -5,7 +5,7 @@ import sys
 from j25 import http
 
 #Remember to modify setup.py
-VERSION = '0.5.2'
+VERSION = '0.5.4'
 
 ###### GLOBALLY AVAILABLE ##########
 config = None
