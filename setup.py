@@ -5,13 +5,13 @@ use_setuptools()
 from setuptools import setup, find_packages
 
 #Remember to modify j25.__init__.VERSION
-version = '0.5.4'
+version = '0.5.5'
 
 required_packages = ['mako >= 0.3.6',
-                     'mongoengine >= v0.4-0',
+                     'mongoengine == 0.5',
                      'routes >= 1.12.3',
                      'simplejson >= 2.1.2',
-                     'celery == 2.3.3',
+                     'celery >= 2.3.3',
                      'WebOb >= 1.0.8',
                      'Beaker >= 1.5.4',
                      'python-memcached >= 1.47'
