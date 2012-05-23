@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 version = '0.5.5'
 
 required_packages = ['mako >= 0.3.6',
-                     'mongoengine == 0.5',
+                     'mongoengine >= 0.5',
                      'routes >= 1.12.3',
                      'simplejson >= 2.1.2',
                      'celery >= 2.3.3',

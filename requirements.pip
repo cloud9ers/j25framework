@@ -1,5 +1,5 @@
 mako >= 0.3.6
-mongoengine == 0.5
+mongoengine >= 0.5
 Routes >= 1.12.3
 simplejson >= 2.1.2
 celery >= 2.3.3
