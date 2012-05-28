@@ -6,6 +6,8 @@ class MongoEngineFactory(object):
     logger = logging.getLogger("MongoEngineFactory")
     @staticmethod
     def create_instance(config):
+        if config.store.enabled == False:
+            return None
         import mongoengine
         params = {}
         if config.store.ip:

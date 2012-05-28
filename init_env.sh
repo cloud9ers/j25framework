@@ -6,11 +6,11 @@ if [ ! -d cache ]
    mkdir cache
 fi
 
-virtualenv --no-site-packages environment
+virtualenv --no-site-packages venv
 
 export PYTHONPATH=
 
-source environment/bin/activate
+source venv/bin/activate
 pip install --download-cache=cache  yolk nose
 
 pip install --download-cache=cache -r requirements.pip

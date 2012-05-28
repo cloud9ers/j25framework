@@ -77,6 +77,7 @@ class Configuration(object):
         #store configuration
         storeSection = cfg.add_section('store')
         storeSection.add_option("db_name", "c9")
+        storeSection.add_option("enabled", "True")
         storeSection.add_option("ip", "127.0.0.1")
         storeSection.add_option("username", None)
         storeSection.add_option("password", None)
