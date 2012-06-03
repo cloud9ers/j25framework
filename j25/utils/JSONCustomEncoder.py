@@ -18,7 +18,7 @@ class JSONCustomEncoder(JSONEncoder):
             except:
                 pass
             return doc
-        if isinstance(obj, Document):
+        if isinstance(obj, (Document, EmbeddedDocument)):
             doc = obj.to_mongo()
             try:
                 doc.pop('_cls')
