@@ -49,7 +49,8 @@ def apply_action(func, controller_instance, args, kwargs):
         return func(controller_instance, *args, **newKwargs)
     
 def render_template(params, headers, app_package, controller_instance, request):
-    headers['Content-Type'] = 'text/html; charset=UTF-8'
+    if 'Content-Type' not in headers:
+        headers['Content-Type'] = 'text/html; charset=UTF-8'
     template_dirs = [os.path.join(os.getcwd(), 'templates')]
     template_dirs.append(os.path.join(app_package.__path__[0], 'templates'))
     tmpDir = os.path.join(app_package.__path__[0], 'tmp')
